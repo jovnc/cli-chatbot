@@ -8,7 +8,7 @@ class Prompt:
     def __str__(self):
         return f"Prompt: {self._text}"
     
-    # Using GPT 3.5 to chat with the user with AI-generated responses
+    # Use GPT 3.5 to chat with the user with AI-generated responses
     def get_response(self, previous_questions_and_answers):
 
         # build the messages
@@ -21,6 +21,19 @@ class Prompt:
             messages.append({ "role": "assistant", "content": answer })
         # add the new question
         messages.append({ "role": "user", "content": self._text })
+
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=messages,
+            temperature=0.8
+        )
+        return completion.choices[0].message.content
+    
+    # Use GPT 3.5 to summarise user content
+    def summarise(self):
+        messages = []
+        # add the new question
+        messages.append({ "role": "user", "content": f"summarise into fewer words: {self._text}" })
 
         completion = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
